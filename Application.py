@@ -70,6 +70,7 @@ def main_screen(screen, clock):
                         button_pressed = True
                 if not button_pressed:
                     if event.button == 1:
+                        Utils.clear_results(map_instance, search_field)
                         coord = Utils.what_is_it((x, y), map_instance.zoom, map_instance.coord)
                         obj = Utils.search(','.join(map(str, coord)))
                         if obj:
