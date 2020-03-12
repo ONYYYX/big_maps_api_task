@@ -4,7 +4,6 @@ import Utils
 import Map
 import Objects
 import Input
-import Services
 
 
 def main_screen(screen, clock):
@@ -13,6 +12,7 @@ def main_screen(screen, clock):
     Objects.TypeSwitch('sat,skl', (Config.width - 50, 150))
 
     search_field = Input.TextInput()
+    Objects.CancelButton((450, Config.height - 30))
 
     map_instance = Map.Map()
     map_instance.reload_image()
@@ -51,12 +51,17 @@ def main_screen(screen, clock):
                         map_instance.type = sprite.type
                         map_instance.reload_image()
                         sprite.keydown()
+                for sprite in Objects.CancelButton.button_group.sprites():
+                    if sprite.rect.collidepoint(x, y):
+                        map_instance.point = ()
+                        map_instance.reload_image()
 
         if search_field.update(events):
             Utils.search(map_instance, search_field.get_text())
 
         screen.blit(map_instance.image, (0, 0))
         Objects.TypeSwitch.button_group.draw(screen)
+        Objects.CancelButton.button_group.draw(screen)
         screen.blit(search_field.get_surface(), (10, Config.height - 30))
 
         pygame.display.flip()
