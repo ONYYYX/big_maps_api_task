@@ -1,4 +1,5 @@
 import sys
+import math
 import os
 import pygame
 import Config
@@ -40,6 +41,11 @@ def search(text: str):
         return obj
 
 
+def search_for_organization(address: str):
+    obj = Services.SearchOrganization.send_request(address)
+    return obj
+
+
 def what_is_it(position: tuple, zoom: int, coord: tuple):
     x, y = position
     a, b = coord
@@ -57,3 +63,21 @@ def clear_results(map_instance: Map.Map, search_field: Input.TextInput):
     search_field.clear_text()
     map_instance.point = ()
     map_instance.reload_image()
+
+
+def lonlat_distance(a, b):
+    degree_to_meters_factor = 111 * 1000  # 111 километров в метрах
+    a_lon, a_lat = a
+    b_lon, b_lat = b
+
+    # Берем среднюю по широте точку и считаем коэффициент для нее.
+    radians_lattitude = math.radians((a_lat + b_lat) / 2.)
+    lat_lon_factor = math.cos(radians_lattitude)
+
+    # Вычисляем смещения в метрах по вертикали и горизонтали.
+    dx = abs(a_lon - b_lon) * degree_to_meters_factor * lat_lon_factor
+    dy = abs(a_lat - b_lat) * degree_to_meters_factor
+
+    # Вычисляем расстояние между точками.
+    distance = math.sqrt(dx * dx + dy * dy)
+    return distance

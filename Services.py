@@ -32,6 +32,18 @@ class Object:
         return a
 
 
+class Organization:
+    def __init__(self, data):
+        self.data = data
+
+    def get_center(self):
+        return tuple(self.data['geometry']['coordinates'])
+
+    def get_address(self, with_index=False):
+        return self.data['properties']['CompanyMetaData']['name'] \
+               + ': ' + self.data['properties']['CompanyMetaData']['address']
+
+
 class Service:
     server = ''
 
@@ -71,3 +83,24 @@ class GeoCoder(Service):
         ).to_json()['response']['GeoObjectCollection']['featureMember']
         if len(objects):
             return Object(objects[0]['GeoObject'])
+
+
+class SearchOrganization(Service):
+    server = Config.sfo_api_server
+
+    @classmethod
+    def send_request(cls, text, **params):
+        p = {
+            'text': text,
+            'apikey': Config.sfo_api_key,
+            'lang': 'ru_RU',
+            'results': 1,
+            'type': 'biz',
+            **params
+        }
+        objects = Response(
+            requests.get(cls.server, params=p)
+        ).to_json()['features']
+        if len(objects):
+            return Organization(objects[0])
+

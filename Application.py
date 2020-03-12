@@ -78,6 +78,18 @@ def main_screen(screen, clock):
                             Objects.InfoBuffer.button_group.set_address(obj.get_address(with_index=map_instance.index))
                         map_instance.point = coord
                         map_instance.reload_image()
+                    if event.button == 3:
+                        Utils.clear_results(map_instance, search_field)
+                        coord = Utils.what_is_it((x, y), map_instance.zoom, map_instance.coord)
+                        obj = Utils.search(','.join(map(str, coord)))
+                        if obj:
+                            obj = Utils.search_for_organization(obj.get_address())
+                            if obj:
+                                if Utils.lonlat_distance(coord, obj.get_center()) <= 50:
+                                    map_instance.last_found_object = obj
+                                    Objects.InfoBuffer.button_group.set_address(obj.get_address(with_index=map_instance.index))
+                                    map_instance.point = coord
+                                    map_instance.reload_image()
 
         if search_field.update(events):
             obj = Utils.search(search_field.get_text())
