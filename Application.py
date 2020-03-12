@@ -1,41 +1,27 @@
-from sys import argv, exit
-from io import BytesIO
-from requests import get
-from PyQt5.QtWidgets import QApplication, QMainWindow
-from PyQt5.QtGui import QPixmap
-from Interface import Ui_MainWindow as ApplicationMainWindow
+import pygame
+import Config
+import Utils
+import Map
 
 
-class Application(QMainWindow, ApplicationMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setupUi(self)
+def main_screen(screen, clock):
+    map_instance = Map.Map()
+    map_instance.reload_image()
+    # Main Loop
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                Utils.terminate()
+        screen.blit(map_instance.image, (0, 0))
+        pygame.display.flip()
+        clock.tick(Config.fps)
 
-        self.host = 'https://static-maps.yandex.ru/1.x/'
-        self.size = 1050, 760
-        self.type = 'map'
-        self.coord = [49.620645, 54.216882]
-        self.zoom = 3
-        self.load_map()
 
-    def load_map(self):
-        map_params = {
-            'll': ','.join(map(str, self.coord)),
-            'l': self.type,
-            'z': self.zoom,
-            'size': ','.join(map(str, self.size))
-        }
-        self.map.setPixmap(QPixmap().loadFromData(bytes(BytesIO(get(self.host, params=map_params).content))))
-        #  Либо так:
-        #  self.map.setPixmap(QPixmap().loadFromData(get(self.host, params=map_params).content))
-        #  Либо так:
-        #  with open('temp.png', 'wb') as f:
-        #       f.write(get(self.host, params=map_params).content)
-        #       self.map.setPixmap(QPixmap('temp.png'))
+def main():
+    screen = Utils.init()
+    clock = pygame.time.Clock()
+    main_screen(screen, clock)
 
 
 if __name__ == '__main__':
-    a = QApplication(argv)
-    app = Application()
-    app.show()
-    exit(a.exec())
+    main()
