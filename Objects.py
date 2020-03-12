@@ -50,8 +50,31 @@ class CancelButton(pygame.sprite.Sprite):
         super().__init__(self.button_group)
         self.image = CancelButton.button_image
         self.rect = self.image.get_rect()
-        self.rect.center = position
+        self.rect.topleft = position
 
     def keydown(self, map_instance: Map.Map):
         map_instance.point = ()
+
+
+class InfoGroup(pygame.sprite.Group):
+    def set_address(self, address):
+        for sprite in self.sprites():
+            sprite.set_address(address)
+
+
+class InfoBuffer(pygame.sprite.Sprite):
+    button_group = InfoGroup()
+    button_image = pygame.Surface((600, 25))
+    button_image.fill((255, 255, 255))
+
+    def __init__(self, position):
+        super().__init__(self.button_group)
+        self.image = InfoBuffer.button_image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = position
+
+    def set_address(self, address):
+        button_text = pygame.font.Font(None, 16).render(address, True, (0, 0, 0), (255, 255, 255))
+        self.image.fill((255, 255, 255))
+        self.image.blit(button_text, (0, 0))
 

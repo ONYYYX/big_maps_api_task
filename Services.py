@@ -22,6 +22,9 @@ class Object:
     def get_center(self):
         return tuple(map(float, self.data['Point']['pos'].split()))
 
+    def get_address(self):
+        return self.data['metaDataProperty']['GeocoderMetaData']['Address']['formatted']
+
 
 class Service:
     server = ''
