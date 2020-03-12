@@ -18,6 +18,7 @@ class Map:
     @type.setter
     def type(self, value):
         self._type = value
+        self.reload_image()
 
     @property
     def coord(self):
@@ -29,6 +30,7 @@ class Map:
         x = Utils.clamp(-180.0, x, 180.0)
         y = Utils.clamp(-90.0, y, 90.0)
         self._coord = x, y
+        self.reload_image()
 
     @property
     def zoom(self):
@@ -37,6 +39,7 @@ class Map:
     @zoom.setter
     def zoom(self, value):
         self._zoom = Utils.clamp(0, value, 17)
+        self.reload_image()
 
     @property
     def image(self):
@@ -56,7 +59,6 @@ class Map:
 
     def offset(self, a, b):
         x, y = self.coord
-        print(Config.width * (360.0 / 2 ** (self.zoom + 8)))
         self.coord = (
             x + a * Config.width * (360.0 / 2 ** (self.zoom + 8)),
             y + b * Config.height * (360.0 / 2 ** (self.zoom + 8))
