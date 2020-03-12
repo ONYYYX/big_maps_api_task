@@ -41,9 +41,9 @@ class CancelGroup(pygame.sprite.Group):
 
 class CancelButton(pygame.sprite.Sprite):
     button_group = CancelGroup()
-    button_image = pygame.Surface((120, 25))
+    button_image = pygame.Surface((60, 10))
     button_image.fill((109, 109, 109))
-    button_text = pygame.font.Font(None, 35).render('Сброс', True, (0, 0, 0), (109, 109, 109))
+    button_text = pygame.font.Font(None, 12).render('Сброс', True, (0, 0, 0), (109, 109, 109))
     button_image.blit(button_text, (0, 0))
 
     def __init__(self, position):
@@ -52,8 +52,23 @@ class CancelButton(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = position
 
-    def keydown(self, map_instance: Map.Map):
-        map_instance.point = ()
+
+class IndexGroup(pygame.sprite.Group):
+    pass
+
+
+class IndexButton(pygame.sprite.Sprite):
+    button_group = IndexGroup()
+    button_image = pygame.Surface((60, 10))
+    button_image.fill((109, 109, 109))
+    button_text = pygame.font.Font(None, 12).render('Индекс', True, (0, 0, 0), (109, 109, 109))
+    button_image.blit(button_text, (0, 0))
+
+    def __init__(self, position):
+        super().__init__(self.button_group)
+        self.image = IndexButton.button_image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = position
 
 
 class InfoGroup(pygame.sprite.Group):

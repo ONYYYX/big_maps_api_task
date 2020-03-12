@@ -10,6 +10,7 @@ class Map:
         self._coord = (49.613829, 54.214371)
         self._zoom = 10
         self._point = ()
+        self._index = False
         self._image = 0
 
     @property
@@ -46,6 +47,14 @@ class Map:
     @point.setter
     def point(self, value):
         self._point = value
+
+    @property
+    def index(self):
+        return self._index
+
+    @index.setter
+    def index(self, value):
+        self._index = value
 
     @property
     def image(self):

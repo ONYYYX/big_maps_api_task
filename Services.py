@@ -22,8 +22,14 @@ class Object:
     def get_center(self):
         return tuple(map(float, self.data['Point']['pos'].split()))
 
-    def get_address(self):
-        return self.data['metaDataProperty']['GeocoderMetaData']['Address']['formatted']
+    def get_address(self, with_index=False):
+        a = self.data['metaDataProperty']['GeocoderMetaData']['Address']['formatted']
+        try:
+            if with_index:
+                a += f", {self.data['metaDataProperty']['GeocoderMetaData']['Address']['postal_code']}"
+        except Exception:
+            pass
+        return a
 
 
 class Service:
