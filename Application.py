@@ -55,6 +55,7 @@ def main_screen(screen, clock):
                         sprite.keydown()
                 for sprite in Objects.CancelButton.button_group.sprites():
                     if sprite.rect.collidepoint(x, y):
+                        map_instance.last_found_object = {}
                         Objects.InfoBuffer.button_group.set_address('')
                         search_field.clear_text()
                         map_instance.point = ()
@@ -63,10 +64,15 @@ def main_screen(screen, clock):
                     if sprite.rect.collidepoint(x, y):
                         map_instance.index = not map_instance.index
                         map_instance.reload_image()
+                        if map_instance.last_found_object:
+                            Objects.InfoBuffer.button_group.set_address(
+                                map_instance.last_found_object.get_address(with_index=map_instance.index)
+                            )
 
         if search_field.update(events):
             obj = Utils.search(search_field.get_text())
             if obj:
+                map_instance.last_found_object = obj
                 Objects.InfoBuffer.button_group.set_address(obj.get_address(with_index=map_instance.index))
                 map_instance.coord = obj.get_center()
                 map_instance.point = obj.get_center()

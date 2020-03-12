@@ -12,6 +12,7 @@ class Map:
         self._point = ()
         self._index = False
         self._image = 0
+        self.last_found_object = {}
 
     @property
     def type(self):
