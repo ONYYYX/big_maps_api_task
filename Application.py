@@ -48,18 +48,17 @@ def main_screen(screen, clock):
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
+                button_pressed = False
                 for sprite in Objects.TypeSwitch.button_group.sprites():
                     if sprite.rect.collidepoint(x, y):
                         map_instance.type = sprite.type
                         map_instance.reload_image()
                         sprite.keydown()
+                        button_pressed = True
                 for sprite in Objects.CancelButton.button_group.sprites():
                     if sprite.rect.collidepoint(x, y):
-                        map_instance.last_found_object = {}
-                        Objects.InfoBuffer.button_group.set_address('')
-                        search_field.clear_text()
-                        map_instance.point = ()
-                        map_instance.reload_image()
+                        Utils.clear_results(map_instance, search_field)
+                        button_pressed = True
                 for sprite in Objects.IndexButton.button_group.sprites():
                     if sprite.rect.collidepoint(x, y):
                         map_instance.index = not map_instance.index
@@ -68,6 +67,16 @@ def main_screen(screen, clock):
                             Objects.InfoBuffer.button_group.set_address(
                                 map_instance.last_found_object.get_address(with_index=map_instance.index)
                             )
+                        button_pressed = True
+                if not button_pressed:
+                    if event.button == 1:
+                        coord = Utils.what_is_it((x, y), map_instance.zoom, map_instance.coord)
+                        obj = Utils.search(','.join(map(str, coord)))
+                        if obj:
+                            map_instance.last_found_object = obj
+                            Objects.InfoBuffer.button_group.set_address(obj.get_address(with_index=map_instance.index))
+                        map_instance.point = coord
+                        map_instance.reload_image()
 
         if search_field.update(events):
             obj = Utils.search(search_field.get_text())

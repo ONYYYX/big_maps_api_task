@@ -3,6 +3,9 @@ import os
 import pygame
 import Config
 import Services
+import Map
+import Input
+import Objects
 
 screen = 0
 
@@ -35,3 +38,22 @@ def search(text: str):
     if text:
         obj = Services.GeoCoder.send_request(text)
         return obj
+
+
+def what_is_it(position: tuple, zoom: int, coord: tuple):
+    x, y = position
+    a, b = coord
+    c = 360.0 / 2 ** (zoom + 8)
+    w, h = x - Config.width // 2, Config.height // 2 - y
+    wg, hg = w * c, h * c
+    a += wg
+    b += hg
+    return a, b
+
+
+def clear_results(map_instance: Map.Map, search_field: Input.TextInput):
+    map_instance.last_found_object = {}
+    Objects.InfoBuffer.button_group.set_address('')
+    search_field.clear_text()
+    map_instance.point = ()
+    map_instance.reload_image()
